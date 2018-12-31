@@ -1,0 +1,4 @@
+*.a
+*.pyc
+__pycache__/
+dmd_args.txt
