@@ -31,10 +31,10 @@ if __name__ == "__main__":
     files = []
 
     # first we generate files from the hand-written templates
-    templateFiles = [ 'loader.d.in' ]
-    for tf in templateFiles:
+    templateDir = path.join(rootDir, 'templates')
+    for tf in os.listdir(templateDir):
         from string import Template
-        with open(path.join(rootDir, 'templates', tf), mode="r") as ifile:
+        with open(path.join(templateDir, tf), mode="r") as ifile:
             t = Template(ifile.read())
             ofname = path.join(srcDir, tf.replace('.in', ''))
             with open(ofname, mode="w") as ofile:
