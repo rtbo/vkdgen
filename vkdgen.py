@@ -140,17 +140,18 @@ class DGeneratorOptions(GeneratorOptions):
 class DGenerator(OutputGenerator):
 
     class FeatureGuard:
-        def __init__(self, versionGuard, stmts):
+        def __init__(self, versionGuards, stmts):
             self.name = ""
-            self.versionGuard = versionGuard
+            self.versionGuards = versionGuards
             self.stmts = stmts
 
         def begin(self, sf):
-            if len(self.versionGuard):
-                sf("version(%s) {", self.versionGuard)
+            for vg in self.versionGuards:
+                sf("version(%s) {", vg)
                 sf.indent()
+
         def end(self, sf):
-            if len(self.versionGuard):
+            for vg in self.versionGuards:
                 sf.unindent()
                 sf("}")
 
@@ -238,15 +239,15 @@ class DGenerator(OutputGenerator):
         self.feature = None
         self.featureGuards = {
             "VK_KHR_win32_surface": DGenerator.FeatureGuard(
-                "Windows",
+                ["Windows"],
                 [ "import core.sys.windows.windef : HINSTANCE, HWND;" ]
             ),
             "VK_KHR_xcb_surface": DGenerator.FeatureGuard(
-                "linux",
+                ["linux", "VkXcb"],
                 [ "import xcb.xcb : xcb_connection_t, xcb_visualid_t, xcb_window_t;" ]
             ),
             "VK_KHR_wayland_surface": DGenerator.FeatureGuard(
-                "linux",
+                ["linux", "VkWayland"],
                 [
                     "import wayland.native.client : wl_display, wl_proxy;",
                     "alias wl_surface = wl_proxy;"
